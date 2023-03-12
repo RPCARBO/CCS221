@@ -3,3 +3,5 @@ numpy
 opencv-python-headless
 matplotlib
 tensorflow
+streamlit_webrtc
+scipy
