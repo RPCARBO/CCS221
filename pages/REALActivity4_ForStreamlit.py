@@ -244,7 +244,7 @@ with tf.compat.v1.Session() as session:
     points_pyramid2 = tf.constant(_pyramid_(bottom_lower=(0, 0, 0)), dtype=tf.float32)
     rotated_pyramid = session.run(rotate_obj(points_pyramid2, x/180*np.pi, y/180*np.pi, z/180*np.pi))
 
-fig2 = plt_basic_object_(rotated_pyramid, counter)
+fig2 = plt_basic_object_(rotated_pyramid.numpy(), counter)
 st.pyplot(fig2)
 
 
@@ -300,5 +300,5 @@ z = st.slider("Enter for z:", -180, 180, 0, step=1,key='my_slider9')
 
 rotated_points = rotate_obj(points_hexagonal_prism, [x/180*np.pi, y/180*np.pi, z/180*np.pi])
 
-fig3 = plt_basic_object_(rotated_points, counter)
+fig3 = plt_basic_object_(rotated_points.numpy(), counter)
 st.pyplot(fig3)
