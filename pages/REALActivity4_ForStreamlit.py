@@ -167,9 +167,9 @@ elif algorithm == "Rotate":
     points_heart = tf.constant(init_octahedron, dtype=tf.float32)
     counter = 1
     st.title("Image Rotate Octahedron")
-    x = st.slider("Rotate around X axis:", -180, 180, 0, step=1,key='my_slider1')
-    y = st.slider("Rotate around Y axis:", -180, 180, 0, step=1,key='my_slider2')
-    z = st.slider("Rotate around Z axis:", -180, 180, 0, step=1,key='my_slider3')
+    x = st.slider("Rotate around X axis:", -180, 180, 0, step=1,key='my_slider10')
+    y = st.slider("Rotate around Y axis:", -180, 180, 0, step=1,key='my_slider11')
+    z = st.slider("Rotate around Z axis:", -180, 180, 0, step=1,key='my_slider12')
 
     rotation_x = tf.constant([[1, 0, 0],
                             [0, np.cos(np.deg2rad(x)), -np.sin(np.deg2rad(x))],
@@ -187,7 +187,7 @@ elif algorithm == "Rotate":
     rotated_points = tf.matmul(rotated_points, rotation_y)
     rotated_points = tf.matmul(rotated_points, rotation_z)
 
-    fig1 = plt_basic_object_(rotated_points.numpy(), counter)
+    fig1 = plt_basic_object_(rotated_points, counter)
     st.pyplot(fig1)
 
 
@@ -196,109 +196,109 @@ elif algorithm == "Rotate":
 
 
 #for pyramid rotate
-def _pyramid_(bottom_lower=(0, 0, 0)):
-    bottom_lower = np.array(bottom_lower) 
+    def _pyramid_(bottom_lower=(0, 0, 0)):
+        bottom_lower = np.array(bottom_lower) 
 
-    points = np.vstack([
-    bottom_lower + [-3, -3, 0],
-    bottom_lower + [-3, +3, 0],
-    bottom_lower + [+3, -3, 0],
-    bottom_lower + [+3, +3, 0],
-    bottom_lower + [0, 0, +5]
-    ])
-
-    return points
-
-def rotate_obj(points, x_angle, y_angle, z_angle):
-    x_angle = float(x_angle)
-    y_angle = float(y_angle)
-    z_angle = float(z_angle)
-
-    rotation_matrix = tf.stack([
-        [tf.cos(x_angle) * tf.cos(y_angle), 
-         tf.cos(x_angle) * tf.sin(y_angle) * tf.sin(z_angle) - tf.sin(x_angle) * tf.cos(z_angle),
-         tf.cos(x_angle) * tf.sin(y_angle) * tf.cos(z_angle) + tf.sin(x_angle) * tf.sin(z_angle)],
-
-        [tf.sin(x_angle) * tf.cos(y_angle),
-         tf.sin(x_angle) * tf.sin(y_angle) * tf.sin(z_angle) + tf.cos(x_angle) * tf.cos(z_angle),
-         tf.sin(x_angle) * tf.sin(y_angle) * tf.cos(z_angle) - tf.cos(x_angle) * tf.sin(z_angle)],
-
-        [-tf.sin(y_angle),
-         tf.cos(y_angle) * tf.sin(z_angle),
-         tf.cos(y_angle) * tf.cos(z_angle)]
-    ])
-
-    rotated_points = tf.matmul(tf.cast(points, tf.float32), tf.cast(rotation_matrix, tf.float32))
-
-    return rotated_points
-
-init_pyramid = _pyramid_(bottom_lower=(0,0,0))
-points_pyramid = tf.constant(init_pyramid, dtype=tf.float32)
-counter = 3
-st.title("Image Rotate Pyramid")
-x = st.slider("Enter for x:", -180, 180, 0, step=1,key='my_slider4')
-y = st.slider("Enter for y:", -180, 180, 0, step=1,key='my_slider5')
-z = st.slider("Enter for z:", -180, 180, 0, step=1,key='my_slider6')
-
-with tf.compat.v1.Session() as session:
-    points_pyramid2 = tf.constant(_pyramid_(bottom_lower=(0, 0, 0)), dtype=tf.float32)
-    rotated_pyramid = session.run(rotate_obj(points_pyramid2, x/180*np.pi, y/180*np.pi, z/180*np.pi))
-
-fig2 = plt_basic_object_(rotated_pyramid.numpy(), counter)
-st.pyplot(fig2)
-
-
-
-
-
-
-
-
-# for hexagonal prism rotate
-
-def _hexagonal_prism_(bottom_lower=(0, 0, 0), side_length=5, height=5):             
-        bottom_lower = np.array(bottom_lower)
-
-        a = side_length/2
-        b = np.sqrt(3)*side_length/2
-        h = height
         points = np.vstack([
-            bottom_lower + [a, 0, 0],
-            bottom_lower + [a/2, b/2, 0],
-            bottom_lower + [-a/2, b/2, 0],
-            bottom_lower + [-a, 0, 0],
-            bottom_lower + [-a/2, -b/2, 0],
-            bottom_lower + [a/2, -b/2, 0],
-            bottom_lower + [a, 0, h],
-            bottom_lower + [a/2, b/2, h],
-            bottom_lower + [-a/2, b/2, h],
-            bottom_lower + [-a, 0, h],
-            bottom_lower + [-a/2, -b/2, h],
-            bottom_lower + [a/2, -b/2, h]
+        bottom_lower + [-3, -3, 0],
+        bottom_lower + [-3, +3, 0],
+        bottom_lower + [+3, -3, 0],
+        bottom_lower + [+3, +3, 0],
+        bottom_lower + [0, 0, +5]
         ])
+
         return points
 
-def rotate_obj(points, angle):
-    angle_x, angle_y, angle_z = angle
-    rotation_matrix_x = tf.stack([[1, 0, 0], [0, tf.cos(angle_x), tf.sin(angle_x)], [0, -tf.sin(angle_x), tf.cos(angle_x)]])
-    rotation_matrix_y = tf.stack([[tf.cos(angle_y), 0, -tf.sin(angle_y)], [0, 1, 0], [tf.sin(angle_y), 0, tf.cos(angle_y)]])
-    rotation_matrix_z = tf.stack([[tf.cos(angle_z), tf.sin(angle_z), 0], [-tf.sin(angle_z), tf.cos(angle_z), 0], [0, 0, 1]])
-    
-    rotation_matrix = tf.matmul(tf.matmul(rotation_matrix_x, rotation_matrix_y), rotation_matrix_z)
+    def rotate_obj(points, x_angle, y_angle, z_angle):
+        x_angle = float(x_angle)
+        y_angle = float(y_angle)
+        z_angle = float(z_angle)
 
-    rotate_prism = tf.matmul(tf.cast(points, tf.float32), tf.cast(rotation_matrix, tf.float32))
+        rotation_matrix = tf.stack([
+            [tf.cos(x_angle) * tf.cos(y_angle), 
+            tf.cos(x_angle) * tf.sin(y_angle) * tf.sin(z_angle) - tf.sin(x_angle) * tf.cos(z_angle),
+            tf.cos(x_angle) * tf.sin(y_angle) * tf.cos(z_angle) + tf.sin(x_angle) * tf.sin(z_angle)],
 
-    return rotate_prism
+            [tf.sin(x_angle) * tf.cos(y_angle),
+            tf.sin(x_angle) * tf.sin(y_angle) * tf.sin(z_angle) + tf.cos(x_angle) * tf.cos(z_angle),
+            tf.sin(x_angle) * tf.sin(y_angle) * tf.cos(z_angle) - tf.cos(x_angle) * tf.sin(z_angle)],
 
-init_hexagonal_prism = _hexagonal_prism_(bottom_lower=(0,0,0))
-points_hexagonal_prism = tf.constant(init_hexagonal_prism, dtype=tf.float32)
-counter = 3
-st.title("Image Rotate Hexagonal Prism")
-x = st.slider("Enter for x:", -180, 180, 0, step=1,key='my_slider7')
-y = st.slider("Enter for y:", -180, 180, 0, step=1,key='my_slider8')
-z = st.slider("Enter for z:", -180, 180, 0, step=1,key='my_slider9')
+            [-tf.sin(y_angle),
+            tf.cos(y_angle) * tf.sin(z_angle),
+            tf.cos(y_angle) * tf.cos(z_angle)]
+        ])
 
-rotated_points = rotate_obj(points_hexagonal_prism, [x/180*np.pi, y/180*np.pi, z/180*np.pi])
+        rotated_points = tf.matmul(tf.cast(points, tf.float32), tf.cast(rotation_matrix, tf.float32))
 
-fig3 = plt_basic_object_(rotated_points.numpy(), counter)
-st.pyplot(fig3)
+        return rotated_points
+
+    init_pyramid = _pyramid_(bottom_lower=(0,0,0))
+    points_pyramid = tf.constant(init_pyramid, dtype=tf.float32)
+    counter = 3
+    st.title("Image Rotate Pyramid")
+    x = st.slider("Enter for x:", -180, 180, 0, step=1,key='my_slider13')
+    y = st.slider("Enter for y:", -180, 180, 0, step=1,key='my_slider14')
+    z = st.slider("Enter for z:", -180, 180, 0, step=1,key='my_slider15')
+
+    with tf.compat.v1.Session() as session:
+        points_pyramid2 = tf.constant(_pyramid_(bottom_lower=(0, 0, 0)), dtype=tf.float32)
+        rotated_pyramid = session.run(rotate_obj(points_pyramid2, x/180*np.pi, y/180*np.pi, z/180*np.pi))
+
+    fig2 = plt_basic_object_(rotated_pyramid, counter)
+    st.pyplot(fig2)
+
+
+
+
+
+
+
+
+    # for hexagonal prism rotate
+
+    def _hexagonal_prism_(bottom_lower=(0, 0, 0), side_length=5, height=5):             
+            bottom_lower = np.array(bottom_lower)
+
+            a = side_length/2
+            b = np.sqrt(3)*side_length/2
+            h = height
+            points = np.vstack([
+                bottom_lower + [a, 0, 0],
+                bottom_lower + [a/2, b/2, 0],
+                bottom_lower + [-a/2, b/2, 0],
+                bottom_lower + [-a, 0, 0],
+                bottom_lower + [-a/2, -b/2, 0],
+                bottom_lower + [a/2, -b/2, 0],
+                bottom_lower + [a, 0, h],
+                bottom_lower + [a/2, b/2, h],
+                bottom_lower + [-a/2, b/2, h],
+                bottom_lower + [-a, 0, h],
+                bottom_lower + [-a/2, -b/2, h],
+                bottom_lower + [a/2, -b/2, h]
+            ])
+            return points
+
+    def rotate_obj(points, angle):
+        angle_x, angle_y, angle_z = angle
+        rotation_matrix_x = tf.stack([[1, 0, 0], [0, tf.cos(angle_x), tf.sin(angle_x)], [0, -tf.sin(angle_x), tf.cos(angle_x)]])
+        rotation_matrix_y = tf.stack([[tf.cos(angle_y), 0, -tf.sin(angle_y)], [0, 1, 0], [tf.sin(angle_y), 0, tf.cos(angle_y)]])
+        rotation_matrix_z = tf.stack([[tf.cos(angle_z), tf.sin(angle_z), 0], [-tf.sin(angle_z), tf.cos(angle_z), 0], [0, 0, 1]])
+        
+        rotation_matrix = tf.matmul(tf.matmul(rotation_matrix_x, rotation_matrix_y), rotation_matrix_z)
+
+        rotate_prism = tf.matmul(tf.cast(points, tf.float32), tf.cast(rotation_matrix, tf.float32))
+
+        return rotate_prism
+
+    init_hexagonal_prism = _hexagonal_prism_(bottom_lower=(0,0,0))
+    points_hexagonal_prism = tf.constant(init_hexagonal_prism, dtype=tf.float32)
+    counter = 3
+    st.title("Image Rotate Hexagonal Prism")
+    x = st.slider("Enter for x:", -180, 180, 0, step=1,key='my_slider16')
+    y = st.slider("Enter for y:", -180, 180, 0, step=1,key='my_slider17')
+    z = st.slider("Enter for z:", -180, 180, 0, step=1,key='my_slider18')
+
+    rotated_points = rotate_obj(points_hexagonal_prism, [x/180*np.pi, y/180*np.pi, z/180*np.pi])
+
+    fig3 = plt_basic_object_(rotated_points, counter)
+    st.pyplot(fig3)
